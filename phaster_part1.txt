@@ -1,0 +1,44 @@
+import os
+ 
+# The top argument for walk
+topdir = '.'
+
+# file of interest
+FOI='summary.txt'
+
+#total summary file with all intact phages
+summary_file='summary_phage.txt'
+
+#walk through directory with PHASTER files and read in summary.txt
+for dirpath, dirnames, files in os.walk(topdir):
+    if FOI in files:
+            path=os.path.join(dirpath, FOI)
+            with open(path, 'r') as f:
+                contents=f.readlines()
+                
+##remove all empty directories   
+#get part of list that contains all the phage hits, remove whitespace, and split by a comma so that you
+#pull out the first hit (highest score)
+#write directory name (with strain #) and first hit to the summary_file
+
+                if len(contents) > 0:
+                    phage=contents[33]
+                    list_of_phages=phage[420:].strip().split(',')
+                    first_hit=list_of_phages[0]
+                    
+                    if '1' in contents[26]:
+                        with open(summary_file, 'a') as f:
+                            f.write(path + '\n')
+                            f.write(first_hit + '\n')
+                    if '2' in contents[26]:
+                        with open(summary_file, 'a') as f:
+                            f.write(path + '\n')
+                            f.write(first_hit + '\n')
+                    if '3' in contents[26]:
+                        with open(summary_file, 'a') as f:
+                            f.write(path + '\n')
+                            f.write(first_hit + '\n')
+
+        
+    
+ ## new script to open summary_file, parse, and graph

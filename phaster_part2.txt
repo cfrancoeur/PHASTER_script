@@ -1,0 +1,69 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import os
+
+##open summary_phage.txt file from phaster_part1, make a dictionary with strain name as the key and value as the first hit phage
+
+count=0
+empty_dict={}
+with open('summary_phage.txt', 'r') as f1:
+    contents=f1.readlines()
+    while count < 65:
+        for index,item in enumerate(contents):
+            if index % 2 == 0:
+       # print(index,item)
+                key=contents[count][2:6].split('_')[0]
+        
+                if key in empty_dict:
+                    value=contents[count+1].split('_')
+                    value=value[0] + value[1]
+                    empty_dict[key].append(value)
+                    
+                else:
+                    value=contents[count+1].split('_')
+                    value=value[0] + value[1]
+                    empty_dict[key]=[value]
+
+                
+            count+=1
+
+empty_dict
+
+#x values are strain names, add 'PHAGE' in first position for dataframe
+x=[]
+for key, value in empty_dict.items():
+    x.append(key)
+
+x=['PHAGE']+ x
+
+#code still in progress, did manual curation of number of phage per strain for now
+
+df = pd.DataFrame(columns=x, 
+                  data=[["Entero",1,1,1,0,1,0,0,0,1,1,1,1,0,0,0,1,1,0,0,0,0,0,1,1],
+                        ["Escher",0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0],
+                        ["Aeromo",0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        ['Gordon',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                        ['Salmon',0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0],
+                        ['Ralsto',0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                        ['Erwini',0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0],
+                        ['Cronob',0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        ["Brevib",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+                        ["Pseudo",0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+                        ["Edward",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+                        ["Bacill",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0]])
+
+#plot intact prophage counts
+
+%matplotlib inline
+
+sns.set_style('white')
+sns.set_style('ticks')
+sns_plot=df.set_index('PHAGE').T.plot(kind='bar', stacked=True,figsize=(20,15),cmap='tab20')
+sns_plot.set_title('Number of Intact Prophages in Fungus Garden Bacteria', fontsize=30)
+sns_plot.set_xlabel("ICBG strain",fontsize=25)
+sns_plot.set_ylabel("Number of Intact Phage",fontsize=25)
+sns_plot.legend(fontsize=15 ,loc=1)
+sns_plot.tick_params(labelsize=20)
+sns_plot.figure.savefig("phaster_phage_count.png",bbox_inches='tight')
