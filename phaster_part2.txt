@@ -10,26 +10,57 @@ count=0
 empty_dict={}
 with open('summary_phage.txt', 'r') as f1:
     contents=f1.readlines()
-    while count < 65:
+    while count < 70:
         for index,item in enumerate(contents):
-            if index % 2 == 0:
-       # print(index,item)
-                key=contents[count][2:6].split('_')[0]
-        
+
+#want each key to be the strain id, start with lines that contain ./ (directory names)
+#get slice that contains key name, split by _ and only take first part
+            if './' in item:
+                key=contents[index][2:6].split('_')[0]
+
+# if the key already exists (multiple prophages in different subdirectories), add any additional intact prophages to the already existing key      
                 if key in empty_dict:
                     value=contents[count+1].split('_')
-                    value=value[0] + value[1]
+                    value=value[1]
                     empty_dict[key].append(value)
                     
+                    if 'PHAGE' in contents[count+2]:
+                        value=contents[count+2].split('_')
+                        value=value[1]
+                        empty_dict[key].append(value)
+                        
+                        if 'PHAGE' in contents[count+3]:
+                            value=contents[count+3].split('_')
+                            value=value[1]
+                            empty_dict[key].append(value)
+                        
+# otherwise if the key doesn't exist, create a new key and add the corresponding values to it
+# had to use try/except to account for the last line of text that will have an index out of range of count +2/3                    
                 else:
                     value=contents[count+1].split('_')
-                    value=value[0] + value[1]
+                    value=value[1]
                     empty_dict[key]=[value]
+                    
+                    try:
+                        if 'PHAGE' in contents[count+2]:
+                            value=contents[count+2].split('_')
+                            value=value[1]
+                            empty_dict[key].append(value)
+                    
+                    except IndexError:
+                        print('error caught')
+                        
+                        try:
+                            if 'PHAGE' in contents[count+3]:
+                                value=contents[count+3].split('_')
+                                value=value[1]
+                                empty_dict[key].append(value)
+                        except IndexError:
+                            print('error caught')
 
                 
             count+=1
 
-empty_dict
 
 #x values are strain names, add 'PHAGE' in first position for dataframe
 x=[]
