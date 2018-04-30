@@ -16,28 +16,51 @@ for dirpath, dirnames, files in os.walk(topdir):
             with open(path, 'r') as f:
                 contents=f.readlines()
                 
+                
 ##remove all empty directories   
 #get part of list that contains all the phage hits, remove whitespace, and split by a comma so that you
 #pull out the first hit (highest score)
 #write directory name (with strain #) and first hit to the summary_file
 
                 if len(contents) > 0:
-                    phage=contents[33]
-                    list_of_phages=phage[420:].strip().split(',')
-                    first_hit=list_of_phages[0]
                     
                     if '1' in contents[26]:
+                        phage=contents[33]
+                        list_of_phages=phage[420:].strip().split(',')
+                        first_hit=list_of_phages[0]
                         with open(summary_file, 'a') as f:
                             f.write(path + '\n')
                             f.write(first_hit + '\n')
+                            
                     if '2' in contents[26]:
+                        phage1=contents[33]
+                        phage2=contents[34]
+                        list_of_phage1=phage1[420:].strip().split(',') 
+                        list_of_phage2=phage2[420:].strip().split(',') 
+                        first_hit1=list_of_phage1[0]
+                        first_hit2=list_of_phage2[0]
                         with open(summary_file, 'a') as f:
                             f.write(path + '\n')
-                            f.write(first_hit + '\n')
+                            f.write(first_hit1 + '\n')
+                            f.write(first_hit2 + '\n')
+                            ## this is not grabbing hit for 2nd intact prophage -- need to update summary file
+                            
                     if '3' in contents[26]:
+                        phage1=contents[33]
+                        phage2=contents[34]
+                        phage3=contents[35]
+                        list_of_phage1=phage1[420:].strip().split(',') 
+                        list_of_phage2=phage2[420:].strip().split(',')
+                        list_of_phage3=phage3[420:].strip().split(',') 
+                        first_hit1=list_of_phage1[0]
+                        first_hit2=list_of_phage2[0]
+                        first_hit3=list_of_phage3[0]
                         with open(summary_file, 'a') as f:
+                            first_hit=list_of_phages[0]
                             f.write(path + '\n')
                             f.write(first_hit + '\n')
+                            f.write(first_hit2 + '\n')
+                            f.write(first_hit3 + '\n')
 
         
     
